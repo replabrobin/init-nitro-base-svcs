@@ -1,0 +1,17 @@
+#!/bin/sh
+
+tty=$1
+
+H=`/bin/dirname $0`
+[ -r "$H/conf" ] && . "$H/conf"
+
+if [ -x /sbin/getty -o -x /bin/getty ]; then
+	# busybox
+	GETTY=getty
+elif [ -x /sbin/agetty -o -x /bin/agetty ]; then
+	# util-linux
+	GETTY=agetty
+fi
+
+exec /bin/${GETTY} ${GETTY_ARGS} \
+	"${tty}" "${BAUD_RATE}" "${TERM_NAME}"

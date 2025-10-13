@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PATH=/usr/bin:/usr/sbin
+
+. /usr/lib/rc/functions
+
+run_sysinit
+
+# Hacky hacky OpenRC compatibility
+for script in /etc/local.d/*.start; do
+    [ -x "$script" ] && "$script"
+done
+
+exec env - PATH=$PATH \
+
+status "Initialization complete"

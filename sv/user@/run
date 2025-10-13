@@ -1,0 +1,17 @@
+#!/bin/sh
+export USER="$1"
+export HOME="`getent passwd "$USER" | cut -d: -f6`"
+
+groups="$(id -Gn "$USER" | tr ' ' ':')"
+ndir="$HOME/.config/nitro"
+if [ ! -d "$ndir" ]; then
+	mkdir -p "$ndir/sv/SYS" "$ndir/levels/default" "$ndir/run"
+	echo -e '#!/usr/bin/sh\nexit 0' > "$ndir/sv/SYS/setup"
+	chmod a+x "$ndir/sv/SYS/setup"
+	ln -sf levels/default "$ndir/services"
+	ln -sf ../../sv/SYS "$ndir/levels/default/SYS"
+	g="`echo $groups | cut -d: -f1`"
+	chown -R "$USER:$g" "$ndir"
+fi
+export NITRO_SOCK="$ndir/run/nitro.sock"
+exec chpst -u "$USER:$groups" nitro "$ndir"

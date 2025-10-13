@@ -1,0 +1,25 @@
+case "${tty}" in
+	(console)
+		BAUD_RATE=38400
+		TERM_NAME=linux
+		;;
+	(serial|AMA*|USB*|S*)
+		GETTY_ARGS="-L"
+		if [ -x /sbin/agetty -o -x /bin/agetty ]; then
+			# util-linux specific settings
+			GETTY_ARGS="${GETTY_ARGS} -8"
+		fi
+		BAUD_RATE=115200
+		TERM_NAME=vt100
+		;;
+	(tty[0-9])
+		if [ -x /sbin/agetty -o -x /bin/agetty ]; then
+			# util-linux specific settings
+			if [ "${tty}" = "tty1" ]; then
+				GETTY_ARGS="--noclear"
+			fi
+		fi
+		BAUD_RATE=38400
+		TERM_NAME=linux
+		;;
+esac

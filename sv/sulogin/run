@@ -1,0 +1,6 @@
+#!/bin/sh
+H=`/bin/dirname $0`
+[ -r "$H/conf" ] && . "$H/conf"
+read -r tty < /sys/class/tty/console/active
+tty=/dev/${tty##* }
+exec sulogin ${OPTS:=-p} < $tty >$tty 2>&1

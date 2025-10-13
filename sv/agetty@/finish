@@ -1,0 +1,4 @@
+#!/bin/sh
+#args are $1=run_status $2=run_signal $3=instance
+tty="$3"
+exec utmpset -w "$tty"

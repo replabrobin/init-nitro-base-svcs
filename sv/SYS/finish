@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PATH=/usr/bin:/usr/sbin
+
+. /usr/lib/rc/functions
+
+# Hacky hacky OpenRC compatibility
+for script in /etc/local.d/*.stop; do
+    [ -x "$script" ] && "$script"
+done
+
+run_shutdown
+status "finished"

@@ -1,0 +1,4 @@
+#!/bin/sh
+logger "FATAL called"
+sync
+sleep 10
