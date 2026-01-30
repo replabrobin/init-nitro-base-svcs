@@ -1,0 +1,18 @@
+#!/bin/bash
+PATH=/usr/bin:/usr/sbin
+HERE="$(dirname -- "$( readlink -f -- "$0"; )")"
+FINAL_SLEEP="$(cat "$HERE/FINAL_SLEEP" 2>/dev/null || echo "")"
+FINAL_REDIRECT="$(cat "$HERE/FINAL_REDIRECT" 2>/dev/null || echo "/dev/console")"
+
+[ -n "$FINAL_REDIRECT" ] && exec &>"$FINAL_REDIRECT" || true
+
+. /usr/lib/rc/functions
+
+# Hacky hacky OpenRC compatibility
+for script in /etc/local.d/*.stop; do
+    [ -x "$script" ] && "$script"
+done
+
+run_shutdown
+status "finalised"
+[ -n "$FINAL_SLEEP" ] && sleep "$FINAL_SLEEP" || true
