@@ -1,6 +1,10 @@
 #!/bin/bash
-
 PATH=/usr/bin:/usr/sbin
+HERE="$(dirname -- "$( readlink -f -- "$0"; )")"
+FINISH_SLEEP="$(cat "$HERE/FINISH_SLEEP" 2>/dev/null || echo "")"
+FINISH_REDIRECT="$(cat "$HERE/FINISH_REDIRECT" 2>/dev/null || echo "/dev/console")"
+
+[ -n "$FINISH_REDIRECT" ] && exec &>"$FINISH_REDIRECT" || true
 
 . /usr/lib/rc/functions
 
@@ -11,3 +15,4 @@ done
 
 run_shutdown
 status "finished"
+[ -n "$FINISH_SLEEP" ] && sleep "$FINISH_SLEEP" || true
