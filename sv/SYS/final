@@ -8,9 +8,18 @@ FINAL_REDIRECT="$(cat "$HERE/FINAL_REDIRECT" 2>/dev/null || echo "/dev/console")
 
 . /usr/lib/rc/functions
 
+status "final starting"
+
+#nitro may leave root ro
+if findmnt -n -o OPTIONS / | grep -qE "^ro,|,ro,|,ro$"; then
+	status  "remounting / rw" mount -o remount,rw /
+else
+	status "/ is already mounted rw"
+fi
+
 # Hacky hacky OpenRC compatibility
 for script in /etc/local.d/*.stop; do
-    [ -x "$script" ] && "$script"
+    [ -x "$script" ] && status "Running $script" "$script" || true
 done
 
 run_shutdown

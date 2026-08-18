@@ -4,11 +4,11 @@ PATH=/usr/bin:/usr/sbin
 
 . /usr/lib/rc/functions
 
-run_sysinit
+status "run_sysinit" run_sysinit
 
 # Hacky hacky OpenRC compatibility
 for script in /etc/local.d/*.start; do
-    [ -x "$script" ] && "$script"
+    [ -x "$script" ] && status "running $script" "$script"
 done
 
 exec env - PATH=$PATH \
